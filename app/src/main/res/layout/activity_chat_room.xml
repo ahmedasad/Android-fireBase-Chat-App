@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".Controller.ChatRoomActivity"
+android:background="#9F93DF">
+
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="0dp"
+            android:layout_height="0dp" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:id="@+id/messagesListView"
+            app:layout_constraintBottom_toTopOf="@+id/sendtxtMessage"
+            android:paddingLeft="3dp" android:paddingTop="2dp" android:paddingRight="3dp"
+            android:paddingBottom="2dp"/>
+    <ImageButton
+            android:layout_width="42dp"
+            android:layout_height="42dp" app:srcCompat="@android:drawable/ic_menu_send"
+            android:id="@+id/sendMsgBtn"
+            android:tint="#0D0879"
+            android:onClick="sendMsgBtnClicked"
+            android:backgroundTint="#9F93DF"
+            app:layout_constraintBottom_toBottomOf="@+id/sendtxtMessage"
+            android:clickable="true"
+            android:layout_marginEnd="4dp" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/sendtxtMessage" app:layout_constraintVertical_bias="0.74"
+            android:background="@drawable/card_rounded_messages"/>
+    <EditText
+            android:layout_width="365dp"
+            android:layout_height="46dp"
+            android:inputType="textMultiLine"
+            android:gravity="start|top"
+            android:ems="10"
+            android:id="@+id/sendtxtMessage"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintEnd_toStartOf="@+id/sendMsgBtn" android:layout_marginStart="3dp"
+            android:hint="Enter Message"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
