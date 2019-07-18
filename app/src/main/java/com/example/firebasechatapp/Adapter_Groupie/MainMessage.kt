@@ -2,7 +2,7 @@ package com.example.firebasechatapp.Adapter_Groupie
 
 import com.example.firebasechatapp.Model.User
 import com.example.firebasechatapp.R
-import com.example.firebasechatapp.Utility.ChatMessage
+import com.example.firebasechatapp.Model.ChatMessage
 import com.example.firebasechatapp.Utility.UserData
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -20,8 +20,9 @@ class MainMessage(val chatMessage: ChatMessage): Item<ViewHolder>() {
     }
 
     override fun bind(viewHolder: ViewHolder, position: Int) {
-
         viewHolder.itemView.txtLatestMessage.text = chatMessage.text
+
+
 
         val chatToId : String
         if(chatMessage.fromId == UserData.currentUser?.uid){
@@ -37,6 +38,12 @@ class MainMessage(val chatMessage: ChatMessage): Item<ViewHolder>() {
             override fun onDataChange(p0: DataSnapshot) {
                 ChatToUser = p0.getValue(User::class.java)
                 viewHolder.itemView.txtLatestuserName.text = ChatToUser?.userName
+                if(ChatToUser?.loginStatus == "true"){
+                    viewHolder.itemView.activeStatus.alpha = 1.toFloat()
+                }
+                else{
+                    viewHolder.itemView.activeStatus.alpha = 0.toFloat()
+                }
 
                 val targetImgView = viewHolder.itemView.latestUserImage
                 Picasso.get().load(ChatToUser?.profileImage).into(targetImgView)

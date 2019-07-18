@@ -110,10 +110,10 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveUserToDatabase(progileImageUrl:String){
+    private fun saveUserToDatabase(profileImageUrl:String){
         val id = FirebaseAuth.getInstance().uid?:""
         val ref = FirebaseDatabase.getInstance().getReference("/users/$id")
-        val user = User(id,txtUserName.text.toString(),progileImageUrl)
+        val user = User(id,txtUserName.text.toString(),profileImageUrl,"false")
         ref.setValue(user)
             .addOnSuccessListener {
                 println("finally created user")

@@ -11,7 +11,7 @@ import com.example.firebasechatapp.Adapter_Groupie.ChatItemFrom
 import com.example.firebasechatapp.Adapter_Groupie.ChatItemTo
 import com.example.firebasechatapp.Model.User
 import com.example.firebasechatapp.R
-import com.example.firebasechatapp.Utility.ChatMessage
+import com.example.firebasechatapp.Model.ChatMessage
 import com.example.firebasechatapp.Utility.USER_KEY
 import com.example.firebasechatapp.Utility.UserData
 import com.google.firebase.auth.FirebaseAuth
@@ -22,7 +22,6 @@ import com.google.firebase.database.FirebaseDatabase
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.activity_chat_room.*
-import kotlinx.android.synthetic.main.activity_register.*
 
 class ChatRoomActivity : AppCompatActivity() {
     val adapter = GroupAdapter<ViewHolder>()
@@ -38,6 +37,7 @@ class ChatRoomActivity : AppCompatActivity() {
         messagesListView.adapter = adapter
         listenForMessages()
         messagesListView.layoutManager = LinearLayoutManager(this)
+        messagesListView.scrollToPosition(adapter.itemCount - 1)
         hideKeyBoard()
     }
 
@@ -69,6 +69,7 @@ class ChatRoomActivity : AppCompatActivity() {
 //                        println("chat message: ${chatMessage.text}")
                         adapter.add(ChatItemFrom(chatMessage.text, toUser!!))
                     }
+                    messagesListView.scrollToPosition(adapter.itemCount - 1)
                 }
                 else{
                     println("chat is null")
@@ -106,7 +107,13 @@ class ChatRoomActivity : AppCompatActivity() {
         val toRef = FirebaseDatabase.getInstance().getReference("/user-messages/$toId/$fromId").push()
 
         if (fromId!!.isNotEmpty() && toId.isNotEmpty() && message.isNotEmpty()) {
-            val chatMessage = ChatMessage(ref.key!!, message, fromId!!, toId, System.currentTimeMillis() / 1000)
+            val chatMessage = ChatMessage(
+                ref.key!!,
+                message,
+                fromId!!,
+                toId,
+                System.currentTimeMillis() / 1000
+            )
 
             ref.setValue(chatMessage)
                 .addOnSuccessListener {

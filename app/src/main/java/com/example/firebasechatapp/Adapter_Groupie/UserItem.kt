@@ -14,8 +14,20 @@ class UserItem(val user: User): Item<ViewHolder>() {
     }
 
     override fun bind(viewHolder: ViewHolder, position: Int) {
-        viewHolder.itemView.UserName.text = user.userName
-        Picasso.get().load(user.profileImage).into(viewHolder.itemView.UserImg)
+        if (user != null) {
+            viewHolder.itemView.UserName.text = user.userName
+            Picasso.get().load(user.profileImage).into(viewHolder.itemView.UserImg)
+            if(user?.loginStatus == "true"){
+                viewHolder.itemView.activeStatusNewUser.alpha = 1.toFloat()
+            }
+            else{
+                viewHolder.itemView.activeStatusNewUser.alpha = 0.toFloat()
+            }
+        }
+        else{
+
+        }
+//        Picasso.get().load(user!!.profileImage).into(viewHolder.itemView.UserImg)
 
     }
 }
