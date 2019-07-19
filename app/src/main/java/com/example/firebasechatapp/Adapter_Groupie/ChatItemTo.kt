@@ -5,8 +5,6 @@ import com.example.firebasechatapp.R
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
-import kotlinx.android.synthetic.main.activity_chat_room.view.*
-import kotlinx.android.synthetic.main.message_row_from.view.*
 import kotlinx.android.synthetic.main.messages_row_to.view.*
 
 class ChatItemTo(val message:String,val user: User): Item<ViewHolder>() {

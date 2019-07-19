@@ -28,6 +28,8 @@ class NewMessageActivity : AppCompatActivity() {
 
         fetchUsers(this)
 
+//        val ref = FirebaseDatabase.getInstance().getReference("/users/null")
+//        ref.
     }
 
     private fun fetchUsers(context: Context){

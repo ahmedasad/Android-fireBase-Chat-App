@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.firebasechatapp.Adapter_Groupie.ChatItemFrom
 import com.example.firebasechatapp.Adapter_Groupie.ChatItemTo
+import com.example.firebasechatapp.Adapter_Groupie.DateAdapter
 import com.example.firebasechatapp.Model.User
 import com.example.firebasechatapp.R
 import com.example.firebasechatapp.Model.ChatMessage
@@ -22,6 +23,9 @@ import com.google.firebase.database.FirebaseDatabase
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.activity_chat_room.*
+import java.lang.Exception
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ChatRoomActivity : AppCompatActivity() {
     val adapter = GroupAdapter<ViewHolder>()
@@ -39,13 +43,16 @@ class ChatRoomActivity : AppCompatActivity() {
         messagesListView.layoutManager = LinearLayoutManager(this)
         messagesListView.scrollToPosition(adapter.itemCount - 1)
         hideKeyBoard()
+        println("tiem ::: "+returnDateString( Calendar.getInstance().time.toString()))
     }
 
     fun sendMsgBtnClicked(view: View) {
         performSendMessage()
     }
 
-    private fun listenForMessages() {
+    lateinit var currentDate:String
+    var date = ""
+     private fun listenForMessages() {
 
         val fromId = FirebaseAuth.getInstance().uid
         val toId = toUser?.uid.toString()
@@ -56,21 +63,35 @@ class ChatRoomActivity : AppCompatActivity() {
 
         ref.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(p0: DataSnapshot, p1: String?) {
-                println("chat is start reading")
-                val chatMessage = p0.getValue(ChatMessage::class.java)
-                if (chatMessage?.text != null) {
-                    if (chatMessage.fromId == fromId && chatMessage.text.isNotEmpty()) {
-                        println("chat ::: ${chatMessage?.fromId}")
 
-                        val currentUser = UserData.currentUser?:return
-                        println("chat user  $currentUser")
-                        adapter.add(ChatItemTo(chatMessage.text, currentUser))
-                    } else {
-//                        println("chat message: ${chatMessage.text}")
-                        adapter.add(ChatItemFrom(chatMessage.text, toUser!!))
-                    }
-                    messagesListView.scrollToPosition(adapter.itemCount - 1)
+                val chatMessage = p0.getValue(ChatMessage::class.java)
+
+                currentDate = returnDateString(chatMessage!!.timeStampt)
+                if(date.isEmpty()){
+                    date = currentDate
+                    adapter.add(DateAdapter(date))
                 }
+
+                else if(date != currentDate){
+                    date = currentDate
+                    adapter.add(DateAdapter(date))
+                }
+
+
+                if (chatMessage?.text != null) {
+
+                        if (chatMessage.fromId == fromId && chatMessage.text.isNotEmpty()) {
+
+                            val currentUser = UserData.currentUser ?: return
+                            adapter.add(ChatItemTo(chatMessage.text, currentUser))
+                        } else {
+                            //                        println("chat message: ${chatMessage.text}")
+                            adapter.add(ChatItemFrom(chatMessage.text, toUser!!))
+                        }
+                        messagesListView.scrollToPosition(adapter.itemCount - 1)
+                    }
+
+
                 else{
                     println("chat is null")
                 }
@@ -112,7 +133,7 @@ class ChatRoomActivity : AppCompatActivity() {
                 message,
                 fromId!!,
                 toId,
-                System.currentTimeMillis() / 1000
+                Calendar.getInstance().time.toString()
             )
 
             ref.setValue(chatMessage)
@@ -141,5 +162,18 @@ class ChatRoomActivity : AppCompatActivity() {
             inputManager.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
             sendtxtMessage.text.clear()
         }
+    }
+
+    fun returnDateString(isoString:String):String{
+        val isoFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+        isoFormatter.timeZone = TimeZone.getTimeZone("UTC")
+        var convertDate = Date()
+        try {
+            convertDate = isoFormatter.parse(isoString)
+        }catch (e: Exception){
+            Log.d("parse","can not parse Date")
+        }
+        val outDateString = SimpleDateFormat("E,h:mm a",Locale.getDefault())
+        return outDateString.format(convertDate)
     }
 }
