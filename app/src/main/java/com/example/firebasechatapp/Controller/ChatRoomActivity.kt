@@ -52,6 +52,8 @@ class ChatRoomActivity : AppCompatActivity() {
 
     lateinit var currentDate:String
     var date = ""
+    lateinit var currentday :String
+    var day = ""
      private fun listenForMessages() {
 
         val fromId = FirebaseAuth.getInstance().uid
@@ -66,15 +68,18 @@ class ChatRoomActivity : AppCompatActivity() {
 
                 val chatMessage = p0.getValue(ChatMessage::class.java)
 
-                currentDate = returnDateString(chatMessage!!.timeStampt)
+                currentDate = chatMessage!!.timeStampt
+                currentday = currentDate.split(",")[0]
                 if(date.isEmpty()){
                     date = currentDate
-                    adapter.add(DateAdapter(date))
+                    day = currentday
+                    adapter.add(DateAdapter(day))
                 }
 
-                else if(date != currentDate){
+                else if(day != currentday){
                     date = currentDate
-                    adapter.add(DateAdapter(date))
+                    day = currentday
+                    adapter.add(DateAdapter(day))
                 }
 
 
@@ -83,10 +88,10 @@ class ChatRoomActivity : AppCompatActivity() {
                         if (chatMessage.fromId == fromId && chatMessage.text.isNotEmpty()) {
 
                             val currentUser = UserData.currentUser ?: return
-                            adapter.add(ChatItemTo(chatMessage.text, currentUser))
+                            adapter.add(ChatItemTo(chatMessage.text, currentUser,currentDate.split(",")[1]))
                         } else {
                             //                        println("chat message: ${chatMessage.text}")
-                            adapter.add(ChatItemFrom(chatMessage.text, toUser!!))
+                            adapter.add(ChatItemFrom(chatMessage.text, toUser!!,currentDate.split(",")[1]))
                         }
                         messagesListView.scrollToPosition(adapter.itemCount - 1)
                     }
@@ -127,13 +132,17 @@ class ChatRoomActivity : AppCompatActivity() {
         val ref = FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId").push()
         val toRef = FirebaseDatabase.getInstance().getReference("/user-messages/$toId/$fromId").push()
 
+        val sDF = SimpleDateFormat("E,h:mm a")
+        val date = sDF.format(Calendar.getInstance().time)
+
+
         if (fromId!!.isNotEmpty() && toId.isNotEmpty() && message.isNotEmpty()) {
             val chatMessage = ChatMessage(
                 ref.key!!,
                 message,
                 fromId!!,
                 toId,
-                Calendar.getInstance().time.toString()
+                date
             )
 
             ref.setValue(chatMessage)
@@ -165,7 +174,7 @@ class ChatRoomActivity : AppCompatActivity() {
     }
 
     fun returnDateString(isoString:String):String{
-        val isoFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+        val isoFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
         isoFormatter.timeZone = TimeZone.getTimeZone("UTC")
         var convertDate = Date()
         try {

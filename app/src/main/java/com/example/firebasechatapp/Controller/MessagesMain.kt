@@ -30,7 +30,6 @@ class MessagesMain : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_messages_main)
 
-
         mainMessageList.adapter = adapter
         adapter.notifyDataSetChanged()
         mainMessageList.layoutManager = LinearLayoutManager(this)
@@ -65,7 +64,8 @@ class MessagesMain : AppCompatActivity() {
         val uid = FirebaseAuth.getInstance().uid
         println("uid: $uid")
 
-        FirebaseDatabase.getInstance().getReference("/users/$uid/loginStatus").setValue("true")
+        val refLogin = FirebaseDatabase.getInstance().getReference("/users/$uid/loginStatus")
+        refLogin.setValue("true")
 
         val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
 

@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".Controller.ChatRoomActivity"
-android:background="#9F93DF">
+android:background="@drawable/wallpaper">
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -19,17 +19,17 @@ android:background="#9F93DF">
             android:paddingLeft="3dp" android:paddingTop="2dp" android:paddingRight="3dp"
             android:paddingBottom="2dp"/>
     <ImageButton
-            android:layout_width="45dp"
-            android:layout_height="45dp" app:srcCompat="@android:drawable/ic_menu_send"
+            android:layout_width="44dp"
+            android:layout_height="44dp" app:srcCompat="@android:drawable/ic_menu_send"
             android:id="@+id/sendMsgBtn"
-            android:tint="#0D0879"
+            android:tint="#000000"
             android:onClick="sendMsgBtnClicked"
             android:backgroundTint="#9F93DF"
             app:layout_constraintBottom_toBottomOf="@+id/sendtxtMessage"
             android:clickable="true"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/sendtxtMessage" app:layout_constraintVertical_bias="1.0"
-            android:background="#957BD1"/>
+            app:layout_constraintTop_toTopOf="@+id/sendtxtMessage" app:layout_constraintVertical_bias="0.0"
+            android:background="#00FFFFFF" android:scaleType="centerCrop"/>
     <EditText
             android:layout_width="365dp"
             android:layout_height="46dp"
@@ -40,5 +40,6 @@ android:background="#9F93DF">
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintEnd_toStartOf="@+id/sendMsgBtn" android:layout_marginStart="3dp"
-            android:hint="Enter Message" android:background="#957BD1"/>
+            android:hint="Enter Message"
+            android:alpha="1.0"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
